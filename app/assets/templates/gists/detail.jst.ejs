@@ -1,0 +1,9 @@
+<h1><%= gist.escape('title') %></h1>
+<button id='favorite-btn' class='btn'>
+  <%= isFav ? "Unfavorite" : "Favorite" %>
+</button>
+<% gist.get('gist_files').each(function(file){ %>
+  <p>Body: <%= file.escape('body') %></p>
+
+<% }) %>
+<a href='#/gists'>back</a>

@@ -1,0 +1,19 @@
+<div style='text-align: right;'>
+  user: <%= current_user.user_name %><%= button_to "logout", sessions_url, method: "delete", class: "btn pull-right" %>
+</div>
+<div>
+  <a href='#/gists'>list</a>
+  |
+  <a href='#/favorites'>favorites</a>
+</div>
+<br>
+<div id='gist-list'></div>
+<div id='new-gist'></div>
+
+<script>
+$(function(){
+  var gists = <%= @gists.to_json(:include => [:gist_files]).html_safe %>;
+  var tags = <%= Tag.all.to_json.html_safe %>
+  window.GA.initialize($("#gist-list"), $("#new-gist"), gists, tags);
+});
+</script>
