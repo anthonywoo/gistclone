@@ -1,2 +1,2 @@
-GA.Models.Tag = Backbone.Model.extend({
+GA.Models.Tag = Backbone.RelationalModel.extend({
 });

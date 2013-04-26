@@ -1,9 +1,4 @@
 GA.Views.GistNewView = Backbone.View.extend({
-  initialize: function() {
-    this.gistFiles = 0;
-
-  },
-
   events: {
     "click #gist-submit": "createGist",
     "click .body-delete-btn": "deleteBody",
@@ -13,7 +8,6 @@ GA.Views.GistNewView = Backbone.View.extend({
   render: function() {
     var content = JST["gists/new"]({gist: this.model});
     this.$el.html(content);
-
     for (var i = 0; i < 3; i++) {
       this.addBodyToEl();
     }
@@ -24,16 +18,7 @@ GA.Views.GistNewView = Backbone.View.extend({
   },
 
   addBodyToEl: function() {
-    this.$el.find("#gist-files").append('\
-    <span>\
-    <label>Body:\
-    <input class="gist-input" type="text" \
-    name="gist[gist_files_attributes][' + (this.gistFiles++) + '][body]"\
-    class="gist-body">\
-    </label>\
-    <a class="body-delete-btn btn btn-mini">delete</a>\
-    <br>\
-    </span>');
+    this.$el.find("#gist-files").append(JST['gists/new-file']());
   },
 
   addBody: function(event) {
@@ -43,12 +28,19 @@ GA.Views.GistNewView = Backbone.View.extend({
 
   deleteBody: function(event) {
     event.preventDefault();
-    console.log(event.target);
     $(event.target).parent().remove();
   },
 
   createGist: function(event) {
     event.preventDefault();
+    var gist = new GA.Models.Gist(this.makeGistParams());
+    gist.save();
+    this.collection.add(gist);
+    this.gistFiles = 0;
+    this.render();
+  },
+
+  makeGistParams: function() {
     var gist = {};
     $(".gist-input").each(function(i, el) {
       var $el = $(el);
@@ -56,19 +48,19 @@ GA.Views.GistNewView = Backbone.View.extend({
         gist[$el.attr('name')] = $el.val();
       }
     });
+    gist['gist_files'] = [];
+    $(".gist-file-input").each(function(i, el) {
+      var $el = $(el);
+      if ($el.val().length > 0) {
+        gist['gist_files'].push({ body: $el.val() });
+      }
+    });
+
     var selected = [];
     _(this.tagSelect.selected).each(function(tag){
-      selected.push(tag.id);
+      selected.push(tag);
     });
-    gist["gist[tag_ids][]"] = selected;
-    console.log(gist);
-    $.post(
-      "/gists",
-      gist,
-      function(data){
-        this.collection.add(new GA.Models.Gist(data, {parse: true}));
-        this.render();
-        this.gistFiles = 0;
-      }.bind(this));
+    gist.tags = selected;
+    return gist;
   }
 })

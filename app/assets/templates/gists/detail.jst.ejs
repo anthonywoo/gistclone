@@ -1,9 +1,20 @@
-<h1><%= gist.escape('title') %></h1>
-<button id='favorite-btn' class='btn'>
-  <%= isFav ? "Unfavorite" : "Favorite" %>
-</button>
+<h1>
+  <span class='editable' data-model='Gist' data-field='title'>
+    <%= gist.escape('title') %>
+  </span>
+  <button id='favorite-btn' class='btn'>
+    <%= gist.isFavorite() ? "Unfavorite" : "Favorite" %>
+  </button>
+  <button id='delete-btn' class='btn'>
+    Delete
+  </button>
+</h1>
+Tags: <span id='gist-tags'>
+</span>
+<br><br>
+<ul>
 <% gist.get('gist_files').each(function(file){ %>
-  <p>Body: <%= file.escape('body') %></p>
-
+  <p>Body: <span class='editable' data-model='GistFile' data-field='body' data-id='<%= file.id %>'><%= file.escape('body') %></span></p>
 <% }) %>
-<a href='#/gists'>back</a>
+</ul>
+<a href='#/gists' class='btn'>back</a>

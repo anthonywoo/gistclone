@@ -1,6 +1,8 @@
 GistProject::Application.routes.draw do
 
   resources :favorites, only: [:index]
+  resources :tags, only: [:index]
+  resources :gist_files, only: [:update]
 
   resources :gists do
     resource :favorites, only: [:create, :destroy]

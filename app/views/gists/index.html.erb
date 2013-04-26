@@ -12,7 +12,7 @@
 
 <script>
 $(function(){
-  var gists = <%= @gists.to_json(:include => [:gist_files]).html_safe %>;
+  var gists = <%= @gists.to_json(:include => [:gist_files, :tags]).html_safe %>;
   var tags = <%= Tag.all.to_json.html_safe %>
   window.GA.initialize($("#gist-list"), $("#new-gist"), gists, tags);
 });

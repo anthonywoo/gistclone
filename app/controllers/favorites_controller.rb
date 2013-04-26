@@ -4,7 +4,7 @@ class FavoritesController < ApplicationController
 
   def index
     favs = current_user.favorite_gists
-    render :json => favs.to_json(:include => [:gist_files])
+    render :json => favs.to_json(:include => [:gist_files, :tags])
   end
 
   def create
